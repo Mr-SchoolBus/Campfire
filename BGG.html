@@ -5,171 +5,319 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Board Game Data</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
         body {
             display: flex;
-            justify-content: center;
-            align-items: center;
             height: 100vh;
-            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
             margin: 0;
-            font-family: 'Poppins', Arial, sans-serif;
-            color: #333;
+            font-family: Arial, sans-serif;
         }
-
-        .container {
-            background: #ffffff;
+        .left, .right {
+            flex: 1;
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            height: 90%;
-            display: flex;
-            justify-content: space-between;
+            box-sizing: border-box;
         }
-
-        .form-container, .filter-container {
-            width: 40%;
-            background: #fef9ef;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        .left {
+            border-right: 1px solid #ccc;
         }
-
-        .filter-container {
-            margin-left: 20px;
+        .right {
+            overflow-y: auto;
         }
-
-        .filter-container h3 {
-            font-size: 22px;
-            margin-bottom: 15px;
-            color: #ff6f61;
+        img {
+            max-width: 100%;
+            max-height: 50vh;
+            height: auto;
+            display: block;
+            margin: 20px auto; /* Center the image horizontally */
         }
-
-        .filter-container label {
+        form#filterForm {
+            margin-top: 20px;
+            font-family: 'Comic Sans MS', cursive, sans-serif; /* Fun font for filters */
+        }
+        form#filterForm label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-
-        .filter-container select, .filter-container button {
+        form#filterForm select {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
+            padding: 8px;
+            margin-bottom: 15px; /* Add spacing between filters */
             border: 1px solid #ccc;
-            border-radius: 10px;
-            font-size: 16px;
+            border-radius: 5px;
+            font-size: 14px;
         }
-
-        .filter-container button {
-            background: #ff6f61;
-            color: #fff;
-            cursor: pointer;
+        .advanced-details {
+            margin-top: 20px;
         }
-
-        .data-container {
-            width: 55%;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
-            font-size: 16px;
-            line-height: 1.6;
-            color: #333;
-        }
-
-        .data-container h2 {
-            font-size: 26px;
-            margin-bottom: 20px;
-            color: #ff6f61;
-        }
-
-        .data-container p {
-            margin: 10px 0;
-        }
-
-        .data-container p strong {
-            display: inline-block;
-            width: 150px;
-            font-weight: bold;
-        }
-
-        .image-container {
-            width: 100%;
-            height: 400px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-            border: 2px dashed #ff6f61;
-            border-radius: 15px;
-            background: #fff5f5;
-        }
-
-        #gameImage {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 15px;
-            object-fit: contain;
+        .advanced-details-content {
+            display: none;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="form-container">
-            <form id="boardGameForm">
-                <label for="gameId">Select Board Game:</label>
-                <select id="gameId" name="gameId" required></select>
-            </form>
-            <div class="filter-dropdown">
-                <button id="filterToggleButton" type="button" onclick="toggleFilters()">Show Filters</button>
-                <div id="filterContent" style="display: none;">
-                    <label for="numPlayers">Number of Players:</label>
-                    <select id="numPlayers">
-                        <option value="">Any</option>
-                        <option value="1">1 Player</option>
-                        <option value="2">2 Players</option>
-                        <option value="3">3 Players</option>
-                        <option value="4">4 Players</option>
-                        <option value="5">5 Players</option>
-                        <option value="6">6+ Players</option>
-                    </select>
+    <div class="left">
+        <form id="boardGameForm">
+            <label for="gameId">Select Board Game:</label>
+            <select id="gameId" name="gameId" required></select>
+        </form>
+        <img id="gameImage" src="" alt="Board Game Image">
+        <h3>Filters</h3>
+        <form id="filterForm">
+            <label for="numPlayers">Number of Players:</label>
+            <select id="numPlayers">
+                <option value="">Any</option>
+                <option value="1">1 Player</option>
+                <option value="2">2 Players</option>
+                <option value="3">3 Players</option>
+                <option value="4">4 Players</option>
+                <option value="5">5 Players</option>
+                <option value="6">6+ Players</option>
+            </select>
 
-                    <label for="playTime">Max Play Time:</label>
-                    <select id="playTime">
-                        <option value="">Any</option>
-                        <option value="15">15 Minutes</option>
-                        <option value="30">30 Minutes</option>
-                        <option value="60">1 Hour</option>
-                        <option value="90">1.5 Hours</option>
-                        <option value="120">2+ Hours</option>
-                    </select>
+            <label for="playTime">Max Play Time:</label>
+            <select id="playTime">
+                <option value="">Any</option>
+                <option value="15">15 Minutes</option>
+                <option value="30">30 Minutes</option>
+                <option value="60">1 Hour</option>
+                <option value="90">1.5 Hours</option>
+                <option value="120">2+ Hours</option>
+            </select>
 
-                    <label for="ageRange">Minimum Age:</label>
-                    <select id="ageRange">
-                        <option value="">Any</option>
-                        <option value="6">6+</option>
-                        <option value="8">8+</option>
-                        <option value="10">10+</option>
-                        <option value="12">12+</option>
-                        <option value="14">14+</option>
-                        <option value="16">16+</option>
-                    </select>
-
-                    <button id="applyFilters" type="button">Apply Filters</button>
-                </div>
-            </div>
-            <div class="image-container">
-                <img id="gameImage" src="" alt="Board Game Image">
-            </div>
-        </div>
-        <div class="data-container">
-            <h2>Game Details</h2>
-            <div id="gameData"></div>
+            <label for="ageRange">Minimum Age:</label>
+            <select id="ageRange">
+                <option value="">Any</option>
+                <option value="6">6+</option>
+                <option value="8">8+</option>
+                <option value="10">10+</option>
+                <option value="12">12+</option>
+                <option value="14">14+</option>
+                <option value="16">16+</option>
+            </select>
+        </form>
+    </div>
+    <div class="right">
+        <h2>Game Details</h2>
+        <div id="gameData"></div>
+        <div class="advanced-details">
+            <button id="toggleAdvancedDetails" type="button">Show Advanced Details</button>
+            <div id="advancedDetailsContent" class="advanced-details-content"></div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameDataContainer = document.getElementById('gameData');
+            const advancedDetailsContent = document.getElementById('advancedDetailsContent');
+            const toggleAdvancedDetails = document.getElementById('toggleAdvancedDetails');
+            const gameImage = document.getElementById('gameImage');
+            const gameIdSelect = document.getElementById('gameId');
+
+            // Embedded list of game IDs (expanded to 60 unique IDs)
+            const gameIds = [
+                120677, 182028, 169786, 102794, 68448, 30549, 124742, 220308, 28720, 173346,
+                192291, 174430, 161936, 167791, 178900, 148228, 187645, 162886, 155821, 144733,
+                140620, 12333, 102794, 68448, 30549, 124742, 220308, 28720, 173346, 192291,
+                187617, 174430, 161936, 167791, 178900, 148228, 187645, 162886, 155821, 144733,
+                140620, 12333, 102794, 68448, 30549, 124742, 220308, 28720, 173346, 192291,
+                187617, 161936, 167791, 178900, 148228, 187645, 162886, 155821, 144733, 140620
+            ];
+
+            // Remove duplicates using a Set
+            const uniqueGameIds = [...new Set(gameIds)];
+
+            // Object to store game details by ID
+            const gameDetails = {};
+
+            // Fetch details for each unique game ID and populate the dropdown
+            uniqueGameIds.forEach(gameId => {
+                fetch(`https://boardgamegeek.com/xmlapi2/thing?id=${gameId}`)
+                    .then(response => response.text()) // Get the response as text (XML)
+                    .then(xmlString => {
+                        const parser = new DOMParser();
+                        const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+
+                        // Extract game details from the XML
+                        const item = xmlDoc.querySelector("item");
+                        const name = item.querySelector("name").getAttribute("value");
+                        const image = item.querySelector("image")?.textContent || '';
+                        const description = item.querySelector("description")?.textContent || 'No description available.';
+                        const yearPublished = item.querySelector("yearpublished")?.getAttribute("value") || 'Unknown';
+                        const minPlayers = item.querySelector("minplayers").getAttribute("value");
+                        const maxPlayers = item.querySelector("maxplayers").getAttribute("value");
+                        const playTime = item.querySelector("playingtime").getAttribute("value");
+                        const age = item.querySelector("minage").getAttribute("value");
+
+                        // Extract advanced details
+                        const categories = Array.from(xmlDoc.querySelectorAll("link[type='boardgamecategory']"))
+                            .map(link => link.getAttribute("value"))
+                            .join(", ") || 'None';
+                        const mechanics = Array.from(xmlDoc.querySelectorAll("link[type='boardgamemechanic']"))
+                            .map(link => link.getAttribute("value"))
+                            .join(", ") || 'None';
+                        const designers = Array.from(xmlDoc.querySelectorAll("link[type='boardgamedesigner']"))
+                            .map(link => link.getAttribute("value"))
+                            .join(", ") || 'Unknown';
+                        const publishers = Array.from(xmlDoc.querySelectorAll("link[type='boardgamepublisher']"))
+                            .map(link => link.getAttribute("value"))
+                            .join(", ") || 'Unknown';
+
+                        // Store game details in the object
+                        gameDetails[gameId] = {
+                            name,
+                            image,
+                            description,
+                            yearPublished,
+                            minPlayers,
+                            maxPlayers,
+                            playTime,
+                            age,
+                            categories,
+                            mechanics,
+                            designers,
+                            publishers
+                        };
+
+                        // Add the game to the dropdown
+                        const option = document.createElement('option');
+                        option.value = gameId;
+                        option.textContent = name;
+                        gameIdSelect.appendChild(option);
+
+                        // Display details of the first game by default
+                        if (gameIdSelect.options.length === 1) {
+                            displayGameDetails(gameDetails[gameId]);
+                        }
+                    })
+                    .catch(error => {
+                        console.error(`Error fetching game details for ID ${gameId}:`, error);
+                    });
+            });
+
+            // Display game details when a game is selected
+            gameIdSelect.addEventListener('change', () => {
+                const selectedGameId = gameIdSelect.value;
+                fetch(`https://boardgamegeek.com/xmlapi2/thing?id=${selectedGameId}`)
+                    .then(response => response.text())
+                    .then(xmlString => {
+                        const parser = new DOMParser();
+                        const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+
+                        const item = xmlDoc.querySelector("item");
+                        const name = item.querySelector("name").getAttribute("value");
+                        const image = item.querySelector("image")?.textContent || '';
+                        const description = item.querySelector("description")?.textContent || 'No description available.';
+                        const yearPublished = item.querySelector("yearpublished")?.getAttribute("value") || 'Unknown';
+                        const minPlayers = item.querySelector("minplayers").getAttribute("value");
+                        const maxPlayers = item.querySelector("maxplayers").getAttribute("value");
+                        const playTime = item.querySelector("playingtime").getAttribute("value");
+                        const age = item.querySelector("minage").getAttribute("value");
+
+                        const categories = Array.from(xmlDoc.querySelectorAll("link[type='boardgamecategory']"))
+                            .map(link => link.getAttribute("value"))
+                            .join(", ") || 'None';
+                        const mechanics = Array.from(xmlDoc.querySelectorAll("link[type='boardgamemechanic']"))
+                            .map(link => link.getAttribute("value"))
+                            .join(", ") || 'None';
+                        const designers = Array.from(xmlDoc.querySelectorAll("link[type='boardgamedesigner']"))
+                            .map(link => link.getAttribute("value"))
+                            .join(", ") || 'Unknown';
+                        const publishers = Array.from(xmlDoc.querySelectorAll("link[type='boardgamepublisher']"))
+                            .map(link => link.getAttribute("value"))
+                            .join(", ") || 'Unknown';
+
+                        displayGameDetails({ name, image, description, yearPublished, minPlayers, maxPlayers, playTime, age, categories, mechanics, designers, publishers });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching game details:', error);
+                        gameDataContainer.textContent = 'Failed to load game details.';
+                    });
+            });
+
+            // Function to display game details
+            function displayGameDetails(game) {
+                const players = game.minPlayers === game.maxPlayers
+                    ? `${game.minPlayers}` // Display a single number if minPlayers equals maxPlayers
+                    : `${game.minPlayers} - ${game.maxPlayers}`; // Display a range otherwise
+
+                gameDataContainer.innerHTML = `
+                    <p><strong>Name:</strong> ${game.name}</p>
+                    <p><strong>Year Published:</strong> ${game.yearPublished}</p>
+                    <p><strong>Players:</strong> ${players}</p>
+                    <p><strong>Play Time:</strong> ${game.playTime} minutes</p>
+                    <p><strong>Age:</strong> ${game.age}+</p>
+                    <p><strong>Description:</strong> ${game.description}</p>
+                `;
+                advancedDetailsContent.innerHTML = `
+                    <p><strong>Categories:</strong> ${game.categories}</p>
+                    <p><strong>Mechanics:</strong> ${game.mechanics}</p>
+                    <p><strong>Designers:</strong> ${game.designers}</p>
+                    <p><strong>Publishers:</strong> ${game.publishers}</p>
+                `;
+                gameImage.src = game.image || '';
+                gameImage.alt = game.name || 'Board Game Image';
+            }
+
+            // Toggle advanced details visibility
+            toggleAdvancedDetails.addEventListener('click', () => {
+                const isVisible = advancedDetailsContent.style.display === 'block';
+                advancedDetailsContent.style.display = isVisible ? 'none' : 'block';
+                toggleAdvancedDetails.textContent = isVisible ? 'Show Advanced Details' : 'Hide Advanced Details';
+            });
+
+            // Automatically apply filters when any filter dropdown changes
+            document.getElementById('numPlayers').addEventListener('change', applyFilters);
+            document.getElementById('playTime').addEventListener('change', applyFilters);
+            document.getElementById('ageRange').addEventListener('change', applyFilters);
+
+            function applyFilters() {
+                const numPlayers = document.getElementById('numPlayers').value;
+                const playTime = document.getElementById('playTime').value;
+                const ageRange = document.getElementById('ageRange').value;
+
+                // Filter games based on selected criteria
+                const filteredGames = uniqueGameIds.filter(gameId => {
+                    const game = gameDetails[gameId]; // Assume `gameDetails` is an object storing game data by ID
+
+                    // Filter by number of players
+                    if (numPlayers && (game.minPlayers > numPlayers || game.maxPlayers < numPlayers)) {
+                        return false;
+                    }
+
+                    // Filter by max play time
+                    if (playTime && game.playTime > parseInt(playTime, 10)) {
+                        return false;
+                    }
+
+                    // Filter by minimum age
+                    if (ageRange && game.age < parseInt(ageRange, 10)) {
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                // Update the dropdown with filtered games
+                gameIdSelect.innerHTML = '';
+                filteredGames.forEach(gameId => {
+                    const game = gameDetails[gameId];
+                    const option = document.createElement('option');
+                    option.value = gameId;
+                    option.textContent = game.name;
+                    gameIdSelect.appendChild(option);
+                });
+
+                // Display the first filtered game by default
+                if (filteredGames.length > 0) {
+                    const firstGame = gameDetails[filteredGames[0]];
+                    displayGameDetails(firstGame);
+                } else {
+                    gameDataContainer.innerHTML = '<p>No games match the selected filters.</p>';
+                }
+            }
+        });
+    </script>
 </body>
 </html>
+``` 
 

@@ -10,6 +10,8 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
+            background: url('Campfire.png') no-repeat bottom center; /* Set background image */
+            background-size: cover; /* Ensure the image covers the entire background */
         }
         .left, .right {
             flex: 1;
@@ -21,6 +23,7 @@
         }
         .right {
             overflow-y: auto;
+            color: white; /* Change text color on the right side to white */
         }
         img {
             max-width: 100%;
@@ -36,7 +39,11 @@
         form#filterForm label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
+            font-weight: 500; /* Use a less bold font */
+            color: yellow; /* Change filter titles to yellow */
+        }
+        h3 {
+            color: yellow; /* Change "Filters" text color to yellow */
         }
         form#filterForm select {
             width: 100%;
@@ -52,6 +59,9 @@
         .advanced-details-content {
             display: none;
             margin-top: 10px;
+        }
+        #scheduleModal h3 {
+            color: black; /* Change the text color to black */
         }
     </style>
 </head>
@@ -104,7 +114,46 @@
             <button id="toggleAdvancedDetails" type="button">Show Advanced Details</button>
             <div id="advancedDetailsContent" class="advanced-details-content"></div>
         </div>
+        <button id="scheduleButton" type="button">Schedule</button>
     </div>
+
+    <!-- Schedule Modal -->
+    <div id="scheduleModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1000;">
+        <h3>Schedule a Game</h3>
+        <form id="scheduleForm">
+            <label for="scheduleDate">Select Date:</label>
+            <input type="date" id="scheduleDate" name="scheduleDate" required>
+            <br><br>
+            <label for="scheduleTime">Select Time:</label>
+            <select id="scheduleTime" name="scheduleTime" required>
+                <option value="12:00">12:00 PM</option>
+                <option value="12:30">12:30 PM</option>
+                <option value="13:00">1:00 PM</option>
+                <option value="13:30">1:30 PM</option>
+                <option value="14:00">2:00 PM</option>
+                <option value="14:30">2:30 PM</option>
+                <option value="15:00">3:00 PM</option>
+                <option value="15:30">3:30 PM</option>
+                <option value="16:00">4:00 PM</option>
+                <option value="16:30">4:30 PM</option>
+                <option value="17:00">5:00 PM</option>
+                <option value="17:30">5:30 PM</option>
+                <option value="18:00">6:00 PM</option>
+                <option value="18:30">6:30 PM</option>
+                <option value="19:00">7:00 PM</option>
+                <option value="19:30">7:30 PM</option>
+                <option value="20:00">8:00 PM</option>
+                <option value="20:30">8:30 PM</option>
+                <option value="21:00">9:00 PM</option>
+                <option value="21:30">9:30 PM</option>
+                <option value="22:00">10:00 PM</option>
+            </select>
+            <br><br>
+            <button type="submit">Submit</button>
+            <button type="button" id="closeModal">Cancel</button>
+        </form>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const gameDataContainer = document.getElementById('gameData');
@@ -112,6 +161,10 @@
             const toggleAdvancedDetails = document.getElementById('toggleAdvancedDetails');
             const gameImage = document.getElementById('gameImage');
             const gameIdSelect = document.getElementById('gameId');
+            const scheduleButton = document.getElementById('scheduleButton');
+            const scheduleModal = document.getElementById('scheduleModal');
+            const closeModal = document.getElementById('closeModal');
+            const scheduleForm = document.getElementById('scheduleForm');
 
             // Embedded list of game IDs (expanded to 60 unique IDs)
             const gameIds = [
@@ -315,6 +368,31 @@
                     gameDataContainer.innerHTML = '<p>No games match the selected filters.</p>';
                 }
             }
+
+            // Show the schedule modal
+            scheduleButton.addEventListener('click', () => {
+                scheduleModal.style.display = 'block';
+            });
+
+            // Close the schedule modal
+            closeModal.addEventListener('click', () => {
+                scheduleModal.style.display = 'none';
+            });
+
+            // Handle form submission
+            scheduleForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const selectedGame = gameIdSelect.options[gameIdSelect.selectedIndex].text;
+                const date = document.getElementById('scheduleDate').value;
+                const time = document.getElementById('scheduleTime').value;
+
+                const mailtoLink = `mailto:alexdragt3@gmail.com?subject=Game Schedule Request&body=I would like to schedule a game of "${selectedGame}" on ${date} at ${time}.`;
+                window.location.href = mailtoLink;
+
+                // Close the modal
+                scheduleModal.style.display = 'none';
+            });
         });
     </script>
 </body>

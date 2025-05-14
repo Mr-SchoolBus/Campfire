@@ -63,6 +63,9 @@
         #scheduleModal h3 {
             color: black; /* Change the text color to black */
         }
+        label[for="gameId"] {
+            color: red; /* Change the text color to red */
+        }
     </style>
 </head>
 <body>
@@ -154,6 +157,56 @@
         </form>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        (function() {
+            emailjs.init('PF8rjKYsbR2NBAEtq'); // 
+        })();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const scheduleButton = document.getElementById('scheduleButton');
+            const scheduleModal = document.getElementById('scheduleModal');
+            const closeModal = document.getElementById('closeModal');
+            const scheduleForm = document.getElementById('scheduleForm');
+            const gameIdSelect = document.getElementById('gameId');
+
+            // Show the schedule modal
+            scheduleButton.addEventListener('click', () => {
+                scheduleModal.style.display = 'block';
+            });
+
+            // Close the schedule modal
+            closeModal.addEventListener('click', () => {
+                scheduleModal.style.display = 'none';
+            });
+
+            // Handle form submission
+            scheduleForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const selectedGame = gameIdSelect.options[gameIdSelect.selectedIndex].text;
+                const date = document.getElementById('scheduleDate').value;
+                const time = document.getElementById('scheduleTime').value;
+
+                // Send email using EmailJS
+                emailjs.send('service_bhpercu', 'template_032b7a5', {
+                    selected_game: selectedGame,
+                    schedule_date: date,
+                    schedule_time: time,
+                })
+                .then(() => {
+                    alert('Your schedule request has been sent successfully!');
+                })
+                .catch((error) => {
+                    console.error('Error sending email:', error);
+                    alert('Failed to send your schedule request. Please try again.');
+                });
+
+                // Close the modal
+                scheduleModal.style.display = 'none';
+            });
+        });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const gameDataContainer = document.getElementById('gameData');
@@ -173,7 +226,8 @@
                 140620, 12333, 102794, 68448, 30549, 124742, 220308, 28720, 173346, 192291,
                 187617, 174430, 161936, 167791, 178900, 148228, 187645, 162886, 155821, 144733,
                 140620, 12333, 102794, 68448, 30549, 124742, 220308, 28720, 173346, 192291,
-                187617, 161936, 167791, 178900, 148228, 187645, 162886, 155821, 144733, 140620
+                187617, 161936, 167791, 178900, 148228, 187645, 162886, 155821, 144733, 140620,
+                256680
             ];
 
             // Remove duplicates using a Set
@@ -250,6 +304,9 @@
             // Display game details when a game is selected
             gameIdSelect.addEventListener('change', () => {
                 const selectedGameId = gameIdSelect.value;
+                const selectedGameName = gameIdSelect.options[gameIdSelect.selectedIndex].text;
+                console.log(`Game selected: ${selectedGameName}`); // Debugging comment
+
                 fetch(`https://boardgamegeek.com/xmlapi2/thing?id=${selectedGameId}`)
                     .then(response => response.text())
                     .then(xmlString => {
@@ -384,11 +441,24 @@
                 e.preventDefault();
 
                 const selectedGame = gameIdSelect.options[gameIdSelect.selectedIndex].text;
+                console.log(`Form submitted for game: ${selectedGame}`); // Debugging comment
+
                 const date = document.getElementById('scheduleDate').value;
                 const time = document.getElementById('scheduleTime').value;
 
-                const mailtoLink = `mailto:alexdragt3@gmail.com?subject=Game Schedule Request&body=I would like to schedule a game of "${selectedGame}" on ${date} at ${time}.`;
-                window.location.href = mailtoLink;
+                // Send email using EmailJS
+                emailjs.send('service_bhpercu', 'template_032b7a5', {
+                    selected_game: selectedGame,
+                    schedule_date: date,
+                    schedule_time: time,
+                })
+                .then(() => {
+                    alert('Your schedule request has been sent successfully! You will receive an autoreply shortly.');
+                })
+                .catch((error) => {
+                    console.error('Error sending email:', error);
+                    alert('Failed to send your schedule request. Please try again.');
+                });
 
                 // Close the modal
                 scheduleModal.style.display = 'none';
@@ -397,5 +467,4 @@
     </script>
 </body>
 </html>
-``` 
 

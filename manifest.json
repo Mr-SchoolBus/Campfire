@@ -1,0 +1,21 @@
+{
+  "name": "Board Game Gallery",
+  "short_name": "BGG",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#222222",
+  "theme_color": "#222222",
+  "description": "A board game gallery for the brewery tablet.",
+  "icons": [
+    {
+      "src": "campfire_192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "campfire_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
